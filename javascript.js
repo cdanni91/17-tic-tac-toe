@@ -11,8 +11,22 @@ function gameBoard() {
         }
     }
 
-    return createBoard;
+    function getBoard () {
+        return board;
+    }
+
+
+
+
+
+
+    return {
+        createBoard,
+        getBoard
+    };
 }
+
+
 
 
 function player() {
@@ -21,56 +35,72 @@ function player() {
         return {name, XorO};
     }
 
-    return createPlayer;
+   
 
+    return {createPlayer,
+            
+    };
 }
+
+
+
+
 
 function joystick() {
 
-    function markBoard (row, column) {
+    function markBoard (board, row, column) {
         if (board[row][column].length) return;
-        board[row][column] = "X";
+        board[row][column].push("X");
     }
 
-    return markBoard;
+    return {
+            markBoard
+
+    };
 }
 
 
-function displayMonitor() {
+function displayMonitor(board) {
 
     function showBoard() {
-
-        console.log(board);
-
-    }
-}
-
-
-
-
-/* 
-    const markCell = (row, column) => {
-        if (board[row][column].length) return;
-        board[row][column] = "X";
-    }
-
-    const showBoard = () => {
         console.log(board);
     }
 
     return {
-        createBoard,
-        markCell,
         showBoard
     };
 }
 
-const myGameBoard = gameBoard();
+/* Create board */
+const myGame = gameBoard();
+myGame.createBoard(3,3);
 
-myGameBoard.createBoard(3, 3);
-console.log("Before marking:");
-myGameBoard.showBoard();
-myGameBoard.markCell(0, 0);
-console.log("After marking:");
-myGameBoard.showBoard();
- */
+const board = myGame.getBoard();
+
+/* show board */
+const monitor = displayMonitor(board);
+monitor.showBoard();
+
+
+/* Create a player */
+const p = player();
+const player1 = p.createPlayer("Bob","X");
+console.log(player1);
+
+
+
+/* Make a play and shows it */
+const playerJoystick = joystick();
+
+playerJoystick.markBoard(board,1,1);
+monitor.showBoard();
+
+playerJoystick.markBoard(board,2,1);
+monitor.showBoard();
+
+
+
+
+
+
+
