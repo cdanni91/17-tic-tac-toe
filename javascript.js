@@ -22,6 +22,8 @@ function gameBoard() {
 
     function checkIfWinner(board) {
 
+        let isWinner = false;
+
         const winningCombinations = [
             [[0, 0], [0, 1], [0, 2]], // fila superior
             [[1, 0], [1, 1], [1, 2]], // fila del medio
@@ -34,6 +36,19 @@ function gameBoard() {
           ];
 
           const isWin = winningCombinations.some(combination => {
+
+
+            const [a, b, c] = combination;
+
+            const cellA = board[a[0]][a[1]][0];
+            const cellB = board[b[0]][b[1]][0];
+            const cellC = board[c[0]][c[1]][0];
+
+            return cellA && cellA === cellB && cellB === cellC;
+
+            });
+
+            /* console.log(isWin); */
 
             /* Lo que esto hace es que cada elemento dentro 
             de winningCombinatios se separe en 3 variables que
@@ -78,30 +93,13 @@ function gameBoard() {
             en realidad lo que se estan comparando son si los elementos
             dentro de cada coordenada son iguales lo que daria la victoria
             
-
-
+            (3) Por ultimo, si cellA no esta vacia, y cellA, cell B
+            y cellC son iguales es un winner move
             */
 
+           
 
-            const [a, b, c] = combination;
-
-            
-            
-            
-
-            const cellA = board[a[0]][a[1]][0];
-            const cellB = board[b[0]][b[1]][0];
-            const cellC = board[c[0]][c[1]][0];
-            
-          
-            return cellA && cellA === cellB && cellB === cellC;
-          });
-
-        
-        
     }
-
-
     return {
         createBoard,
         getBoard,
@@ -114,13 +112,16 @@ function gameBoard() {
 
 function player() {
 
-    function createPlayer(name,symbol) {
-        return {name, symbol};
+    function createPlayer(name,symbol, isTurn) {
+        return {name, symbol, isTurn};
     }
 
-   
+    
+    
+
 
     return {createPlayer
+            
             
     };
 }
@@ -129,9 +130,9 @@ function player() {
 
 function joystick() {
 
-    function markBoard (board, row, column) {
+    function markBoard (board, row, column, mark) {
         if (board[row][column].length) return;
-        board[row][column].push("X");
+        board[row][column].push(mark);
     }
 
     return {
@@ -140,54 +141,70 @@ function joystick() {
 }
 
 
-function displayMonitor(board) {
 
-    function showBoard() {
+function gameMaster() {
+
+    /* prints the board */
+    function showBoard(board) {
         console.log(board);
     }
 
+    /* alternate the turns */
+    function defineWhosTurn (player1, player2) {
+
+        let mark = "";
+
+        if (player1.isTurn) {
+            mark = player1.symbol;
+            player1.isTurn = false;
+            player2.isTurn = true;
+        } else {
+            mark = player2.symbol;
+            player2.isTurn = false;
+            player1.isTurn = true;
+        }
+
+        return mark
+    }
+
+
+
     return {
-        showBoard
+        showBoard,
+        defineWhosTurn
     };
+
 }
 
 
+/* order test */
 
 
-
-
-/* test program */
-
-
-/* Create board */
+/* create and retrieve the gameboard */
 const myGame = gameBoard();
 myGame.createBoard(3,3);
-
 const board = myGame.getBoard();
 
-/* show board */
-const monitor = displayMonitor(board);
-/* monitor.showBoard(); */
 
+/* create both players, assignin the first player the first turn */
+const playerCreator = player();
+const player1 = playerCreator.createPlayer("Bob","X", true);
+const player2 = playerCreator.createPlayer("Luis", "O", false);
 
-/* Create a player */
-const p = player();
-const player1 = p.createPlayer("Bob","X");
-/* console.log(player1.symbol); */
-
-
-
-/* Make a play and shows it */
+/* creates the joystick to play */
 const playerJoystick = joystick();
 
+/* create the GM to manage the game */
+const GM = gameMaster();
 
 
-myGame.checkIfWinner(board);
-playerJoystick.markBoard(board,0,0);
-playerJoystick.markBoard(board,1,0);
-playerJoystick.markBoard(board,2,0);
-monitor.showBoard();
-myGame.checkIfWinner(board);
+
+
+
+
+
+
+
 
 
 /* 
