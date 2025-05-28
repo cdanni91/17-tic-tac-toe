@@ -56,7 +56,7 @@ function joystick() {
 
         function checkIfValid(board, row, column) {
             // Verifica si la posición está dentro del rango y está vacía
-            /* if (isNaN(row) || isNaN(column)) return false; */
+            if (isNaN(row) || isNaN(column)) return false;
             if (row < 0 || row > 2 || column < 0 || column > 2) return false;
             if (row < 0 || row > 2 || column < 0 || column > 2) return false;
             if (board[row][column].length) return false;
