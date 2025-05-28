@@ -56,23 +56,26 @@ function joystick() {
 
         function checkIfValid(board, row, column) {
             // Verifica si la posición está dentro del rango y está vacía
+            /* if (isNaN(row) || isNaN(column)) return false; */
+            if (row < 0 || row > 2 || column < 0 || column > 2) return false;
             if (row < 0 || row > 2 || column < 0 || column > 2) return false;
             if (board[row][column].length) return false;
+            
             return true;
         }
 
         
 
         // obliga al usuario a que la posicion a marcar sea valida
-        while (isValidMove != true) {
+        while (!isValidMove) {
 
-        const [userRow, userColumn] = askForCoordinates();
+        const [rowCoordinate, columnCoordinate] = askForCoordinates();
         
         // si no es valido repite el turno
-        if(!checkIfValid(board,userRow,userColumn)) continue;
+        if(!checkIfValid(board,rowCoordinate,columnCoordinate)) continue;
 
         // si es valido marca el tablero y permite romper el loop
-        board[userRow][userColumn].push(mark);
+        board[rowCoordinate][columnCoordinate].push(mark);
         isValidMove = true;
 
         }
@@ -221,7 +224,7 @@ const game = function playGame() {
     myGame.createBoard(3,3);
     const board = myGame.getBoard();
     
-    // create both players, assignin the first player the first turn 
+    // create both players, assigns the first player the first turn 
     const playerCreator = player();
         // ask the players numbers
     const name1 = prompt("What is your name?")
@@ -235,8 +238,11 @@ const game = function playGame() {
     // create the GM to manage the game flow
     const GM = gameMaster();
 
-    // plays the game
-        //the conditions are theres o winner or 9 rounds been played
+
+
+    ////// plays the game /////
+
+        //the conditions are theres o winner or 9 valid rounds been played
     const maxRounds = 9;
     let roundsPlayed = 0;
     let winnerFound = false;
