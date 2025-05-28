@@ -16,9 +16,66 @@ function gameBoard() {
     }
 
 
+    return {
+        createBoard,
+        getBoard,
+        
+    };
+}
 
 
 
+function player() {
+
+    function createPlayer(name,symbol, isTurn) {
+        return {name, symbol, isTurn};
+    }
+
+    return {
+        createPlayer
+    };
+}
+
+
+
+function joystick() {
+
+    function markBoard (board, row, column, mark) {
+        if (board[row][column].length) return;
+        board[row][column].push(mark);
+    }
+
+    return {
+            markBoard
+    };
+}
+
+
+
+function gameMaster() {
+
+    /* prints the board */
+    function showBoard(board) {
+        console.log(board);
+    }
+
+    /* alternate the turns */
+    function defineWhosTurn (player1, player2) {
+
+        let mark = "";
+
+        if (player1.isTurn) {
+            mark = player1.symbol;
+            player1.isTurn = false;
+            player2.isTurn = true;
+        } else {
+            mark = player2.symbol;
+            player2.isTurn = false;
+            player1.isTurn = true;
+        }
+
+        return mark
+    }
 
     function checkIfWinner(board) {
 
@@ -47,6 +104,8 @@ function gameBoard() {
             return cellA && cellA === cellB && cellB === cellC;
 
             });
+
+            return isWin;
 
             /* console.log(isWin); */
 
@@ -100,84 +159,20 @@ function gameBoard() {
            
 
     }
-    return {
-        createBoard,
-        getBoard,
-        checkIfWinner
-    };
-}
-
-
-
-
-function player() {
-
-    function createPlayer(name,symbol, isTurn) {
-        return {name, symbol, isTurn};
-    }
-
-    
-    
-
-
-    return {createPlayer
-            
-            
-    };
-}
-
-
-
-function joystick() {
-
-    function markBoard (board, row, column, mark) {
-        if (board[row][column].length) return;
-        board[row][column].push(mark);
-    }
-
-    return {
-            markBoard
-    };
-}
-
-
-
-function gameMaster() {
-
-    /* prints the board */
-    function showBoard(board) {
-        console.log(board);
-    }
-
-    /* alternate the turns */
-    function defineWhosTurn (player1, player2) {
-
-        let mark = "";
-
-        if (player1.isTurn) {
-            mark = player1.symbol;
-            player1.isTurn = false;
-            player2.isTurn = true;
-        } else {
-            mark = player2.symbol;
-            player2.isTurn = false;
-            player1.isTurn = true;
-        }
-
-        return mark
-    }
-
-
 
     return {
         showBoard,
-        defineWhosTurn
+        defineWhosTurn,
+        checkIfWinner
     };
 
 }
 
 
-/* order test */
+
+
+
+/* flow test */
 
 
 /* create and retrieve the gameboard */
@@ -194,10 +189,34 @@ const player2 = playerCreator.createPlayer("Luis", "O", false);
 /* creates the joystick to play */
 const playerJoystick = joystick();
 
-/* create the GM to manage the game */
+/* create the GM to manage the game flow */
 const GM = gameMaster();
+    //define whos turn is it
+    mark = GM.defineWhosTurn(player1,player2);
+
+/* mark the board */
+playerJoystick.markBoard(board,0,0,mark);
+    //shows the board
+    GM.showBoard(board);
+    //define whos turn is it
+    mark = GM.defineWhosTurn(player1,player2);
+
+/* mark the board */
+playerJoystick.markBoard(board,1,1,mark);
+    //shows the board
+    GM.showBoard(board);
+    //define whos turn is it
+    mark = GM.defineWhosTurn(player1,player2);
+    /* check if winner - false */
+    console.log(GM.checkIfWinner(board))
 
 
+/* make a player win */
+playerJoystick.markBoard(board,0,1,mark);
+playerJoystick.markBoard(board,0,2,mark);
+GM.showBoard(board);
+    /* check if winner - true */
+    console.log(GM.checkIfWinner(board))
 
 
 
