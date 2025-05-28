@@ -40,16 +40,41 @@ function player() {
 
 function joystick() {
 
-    function markBoard (board, row, column, mark) {
+    function markBoard (board, mark) {
 
         let isValidMove = false;
+
+
+        function askForCoordinates(){
+
+            const rowCoordinate = prompt("What row?");
+            const columnCoordinate = prompt("What column?");
+
+            return [parseInt(rowCoordinate), parseInt(columnCoordinate)];
+
+        }
+
+        function checkIfValid(board, row, column) {
+            // Verifica si la posición está dentro del rango y está vacía
+            if (row < 0 || row > 2 || column < 0 || column > 2) return false;
+            if (board[row][column].length) return false;
+            return true;
+        }
+
+        
+
         // obliga al usuario a que la posicion a marcar sea valida
-        while (!isValidMove) {
-        // si tiene contenido no hace nada
-        if (board[row][column].length) return;
+        while (isValidMove != true) {
+
+        const [userRow, userColumn] = askForCoordinates();
+        
+        // si no es valido repite el turno
+        if(!checkIfValid(board,userRow,userColumn)) continue;
+
         // si es valido marca el tablero y permite romper el loop
-        board[row][column].push(mark);
+        board[userRow][userColumn].push(mark);
         isValidMove = true;
+
         }
     }
 
@@ -220,12 +245,9 @@ const game = function playGame() {
     while(!winnerFound && roundsPlayed < maxRounds) {
 
         //define whos turn is it
-        mark = GM.defineWhosTurn(player1,player2);
-        //ask the player the coordinates of his play 
-        const rowCoordinate = prompt("What row?");
-        const columnCoordinate = prompt("What column?");
-        //mark the board with the current player mark
-        playerJoystick.markBoard(board,rowCoordinate,columnCoordinate,mark);
+        let mark = GM.defineWhosTurn(player1,player2);
+        //mark the board with the current player mark if valid
+        playerJoystick.markBoard(board,mark);
             //checks if the combination is a winner
         if (GM.checkIfWinner(board)) winnerFound = true;
         // shows the board
