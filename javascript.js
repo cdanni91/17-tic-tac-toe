@@ -41,8 +41,16 @@ function player() {
 function joystick() {
 
     function markBoard (board, row, column, mark) {
+
+        let isValidMove = false;
+        // obliga al usuario a que la posicion a marcar sea valida
+        while (!isValidMove) {
+        // si tiene contenido no hace nada
         if (board[row][column].length) return;
+        // si es valido marca el tablero y permite romper el loop
         board[row][column].push(mark);
+        isValidMove = true;
+        }
     }
 
     return {
@@ -79,8 +87,6 @@ function gameMaster() {
 
     function checkIfWinner(board) {
 
-        let isWinner = false;
-
         const winningCombinations = [
             [[0, 0], [0, 1], [0, 2]], // fila superior
             [[1, 0], [1, 1], [1, 2]], // fila del medio
@@ -105,7 +111,7 @@ function gameMaster() {
 
             });
 
-            return isWin;
+            
 
             /* console.log(isWin); */
 
@@ -156,9 +162,23 @@ function gameMaster() {
             y cellC son iguales es un winner move
             */
 
-           
 
+        /* add a nested function so it triggers when isWin is true */            
+        function endGame (isWin) {
+            if (isWin) {
+                console.log("GAME OVER");
+            }
+        }
+    
+        endGame(isWin);
+        
+        /* isWin is returned later so endGame can use it too */
+        return isWin;
     }
+    
+
+
+    
 
     return {
         showBoard,
@@ -169,54 +189,60 @@ function gameMaster() {
 }
 
 
+const game = function playGame() {
+
+    // create board
+    const myGame = gameBoard();
+    myGame.createBoard(3,3);
+    const board = myGame.getBoard();
+    
+    // create both players, assignin the first player the first turn 
+    const playerCreator = player();
+        // ask the players numbers
+    const name1 = prompt("What is your name?")
+    const name2 = prompt("Whats yours?")
+        // asigns the starting symbol automatically
+    const player1 = playerCreator.createPlayer(name1,"X", true);
+    const player2 = playerCreator.createPlayer(name2, "O", false);
+
+    // create the joystick to play with
+    const playerJoystick = joystick();
+    // create the GM to manage the game flow
+    const GM = gameMaster();
+
+    // plays the game
+        //the conditions are theres o winner or 9 rounds been played
+    const maxRounds = 9;
+    let roundsPlayed = 0;
+    let winnerFound = false;
 
 
+    while(!winnerFound && roundsPlayed < maxRounds) {
 
-/* flow test */
-
-
-/* create and retrieve the gameboard */
-const myGame = gameBoard();
-myGame.createBoard(3,3);
-const board = myGame.getBoard();
-
-
-/* create both players, assignin the first player the first turn */
-const playerCreator = player();
-const player1 = playerCreator.createPlayer("Bob","X", true);
-const player2 = playerCreator.createPlayer("Luis", "O", false);
-
-/* creates the joystick to play */
-const playerJoystick = joystick();
-
-/* create the GM to manage the game flow */
-const GM = gameMaster();
-    //define whos turn is it
-    mark = GM.defineWhosTurn(player1,player2);
-
-/* mark the board */
-playerJoystick.markBoard(board,0,0,mark);
-    //shows the board
-    GM.showBoard(board);
-    //define whos turn is it
-    mark = GM.defineWhosTurn(player1,player2);
-
-/* mark the board */
-playerJoystick.markBoard(board,1,1,mark);
-    //shows the board
-    GM.showBoard(board);
-    //define whos turn is it
-    mark = GM.defineWhosTurn(player1,player2);
-    /* check if winner - false */
-    console.log(GM.checkIfWinner(board))
+        //define whos turn is it
+        mark = GM.defineWhosTurn(player1,player2);
+        //ask the player the coordinates of his play 
+        const rowCoordinate = prompt("What row?");
+        const columnCoordinate = prompt("What column?");
+        //mark the board with the current player mark
+        playerJoystick.markBoard(board,rowCoordinate,columnCoordinate,mark);
+            //checks if the combination is a winner
+        if (GM.checkIfWinner(board)) winnerFound = true;
+        // shows the board
+        GM.showBoard(board);
 
 
-/* make a player win */
-playerJoystick.markBoard(board,0,1,mark);
-playerJoystick.markBoard(board,0,2,mark);
-GM.showBoard(board);
-    /* check if winner - true */
-    console.log(GM.checkIfWinner(board))
+    
+        roundsPlayed += 1;
+    }
+
+    
+
+    
+
+}
+
+game();
 
 
 
