@@ -11,7 +11,7 @@ function gameBoard() {
         }
 
         // testing board
-        board[0][0] = "X"
+        /* board[0][0] = "X"
         board[0][1] = "X"
         board[0][2] = "X"
         board[1][0] = "O"
@@ -20,7 +20,7 @@ function gameBoard() {
         board[2][0] = "X"
         board[2][1] = "O"
         board[2][2] = "X"
-        console.log(board);
+        console.log(board); */
     }
 
     function getBoard () {
@@ -246,8 +246,6 @@ function frontCreator () {
             createBoard(board);
             clearScores();
             
-            
-
         })
 
 
@@ -257,6 +255,7 @@ function frontCreator () {
                 let name2 = "";
                 let player1 = {};
                 let player2 = {};
+
 
                 function setPlayerNames () {
                     const player1NameInput = document.querySelector("#player_1");
@@ -273,7 +272,7 @@ function frontCreator () {
 
                 }
 
-                setPlayerNames();
+                
 
                 function createPlayers(name1, name2) {
 
@@ -284,6 +283,8 @@ function frontCreator () {
                     
                 }
 
+                //get the names and create the players
+                setPlayerNames();
                 createPlayers(name1,name2);
                 
                 
