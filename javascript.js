@@ -11,7 +11,7 @@ function gameBoard() {
         }
 
         // testing board
-        /* board[0][0] = "X"
+        board[0][0] = "X"
         board[0][1] = "X"
         board[0][2] = "X"
         board[1][0] = "O"
@@ -20,7 +20,7 @@ function gameBoard() {
         board[2][0] = "X"
         board[2][1] = "O"
         board[2][2] = "X"
-        console.log(board); */
+        console.log(board);
     }
 
     function getBoard () {
@@ -320,28 +320,24 @@ function frontCreator () {
     }
     
 
-    function pressResetGame() {
+    function pressResetButton() {
 
         const resetGameButton = document.querySelector("#reset-game");
 
-            
+            resetGameButton.addEventListener("click", () =>{
 
-         
-            function clearBoard() {
-
-                resetGameButton.addEventListener("click", () => {
-
-                const gameBoard = document.querySelector("#game");
-                gameBoard.innerHTML = "";
-                
+                clearBoard();
                 clearScores();
 
-                });
-                
+            })
+
+         
+
+            function clearBoard() {
+                const gameBoard = document.querySelector("#game");
+                gameBoard.innerHTML = "";
             }
             
-        
-        clearBoard();
     }
 
 
@@ -355,7 +351,7 @@ function frontCreator () {
 
     return {
         pressStartGame,
-        pressResetGame,
+        pressResetButton,
         clearScores,
         
     }
@@ -380,7 +376,7 @@ const playerFactory = player();
 const front = frontCreator();
 
 front.pressStartGame(playerFactory);
-front.pressResetGame();
+front.pressResetButton();
 
 
 
