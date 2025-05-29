@@ -9,6 +9,18 @@ function gameBoard() {
                 board[i][j] = [];
             }
         }
+
+        // testing board
+        /* board[0][0] = "X"
+        board[0][1] = "X"
+        board[0][2] = "X"
+        board[1][0] = "O"
+        board[1][1] = "O"
+        board[1][2] = "O"
+        board[2][0] = "X"
+        board[2][1] = "O"
+        board[2][2] = "X"
+        console.log(board); */
     }
 
     function getBoard () {
@@ -24,10 +36,9 @@ function gameBoard() {
 }
 
 
-
 function player() {
 
-    function createPlayer(name,symbol, isTurn) {
+    function createPlayer(name,symbol,isTurn) {
 
         const score = 0;
 
@@ -223,25 +234,57 @@ function gameMaster() {
 function frontCreator () {
 
 
-    function pressStartGame() {
+    function pressStartGame(playerFactory) {
 
         const startGameButton = document.querySelector("#start-game");
         const gameContainer = document.querySelector("#game");
 
-        function setPlayerNames () {
-            startGameButton.addEventListener("click", () => {
-                const player1NameInput = document.querySelector("#player_1");
-                const player2NameInput = document.querySelector("#player_2");
-                const player1NameSlot = document.querySelector("#player-1-name");
-                const player2NameSlot = document.querySelector("#player-2-name");
 
-                // clears the default name and puts the one in the input fields
-                player1NameSlot.innerText = player1NameInput.value;
-                player2NameSlot.innerText = player2NameInput.value;
+        function setPlayers () {
+
+            startGameButton.addEventListener("click", () => {
+
+                function setPlayerNames () {
+                    const player1NameInput = document.querySelector("#player_1");
+                    const player2NameInput = document.querySelector("#player_2");
+                    const player1NameSlot = document.querySelector("#player-1-name");
+                    const player2NameSlot = document.querySelector("#player-2-name");
+
+                    // clears the default name and puts the one in the input fields
+                    player1NameSlot.innerText = player1NameInput.value;
+                    player2NameSlot.innerText = player2NameInput.value;
+
+                    const name1 = player1NameInput.value;
+                    const name2 = player2NameInput.value;
+
+                    return {name1, name2};
+                }
+
+                // get the names of the players
+                const {name1, name2} = setPlayerNames();
+
+                function createPlayers(name1, name2) {
+
+                    const player1 = playerFactory.createPlayer(name1,"X",true);
+                    const player2 = playerFactory.createPlayer(name2,"O",false);
+
+                    console.log(player1, player2);
+
+                    return {player1, player2}
+                }
+
+                createPlayers(name1,name2);
+                clearScores();
+
             });
-        }
 
         
+
+        }
+        
+
+        
+
 
         function createBoard (board) {
             startGameButton.addEventListener("click", () => {
@@ -252,10 +295,10 @@ function frontCreator () {
                     //console.log(column);
 
                     column.forEach((cell, index) => {
-                        console.log(cell, index);
+                        console.log(cell);
 
                         const square = document.createElement("div");
-                        square.innerText = i;
+                        square.innerText = cell;
                         square.setAttribute("square_number",`${i}`)
                         gameContainer.appendChild(square);
                         i++
@@ -269,54 +312,52 @@ function frontCreator () {
         }
 
 
-
-        setPlayerNames();
+        
+        setPlayers();
         createBoard(board); 
+        
+        
     }
-
-
     
+
     function pressResetGame() {
 
         const resetGameButton = document.querySelector("#reset-game");
+
+            
+
          
-
-
-        function clearScores () {
-
-            resetGameButton.addEventListener("click", () => {
-
-                const player1Score = document.querySelector("#player-1-scoreboard");
-                const player2Score = document.querySelector("#player-2-scoreboard");
-
-                
-                player1Score.innerText = 0;
-                player2Score.innerText = 0;
-                
-
-            })
-            }
-
             function clearBoard() {
 
                 resetGameButton.addEventListener("click", () => {
 
                 const gameBoard = document.querySelector("#game");
                 gameBoard.innerHTML = "";
+                
+                clearScores();
+
                 });
                 
             }
             
-
-
-        clearScores();
+        
         clearBoard();
     }
 
 
+    function clearScores () {
+            const player1Score = document.querySelector("#player-1-scoreboard");
+            const player2Score = document.querySelector("#player-2-scoreboard");
+            player1Score.innerText = 0;
+            player2Score.innerText = 0;
+        }
+
+
     return {
         pressStartGame,
-        pressResetGame
+        pressResetGame,
+        clearScores,
+        
     }
 
 
@@ -331,12 +372,14 @@ const myGame = gameBoard();
 myGame.createBoard(3,3);
 const board = myGame.getBoard();
 
+// create players
+const playerFactory = player();
 
 
 //testing the front game
 const front = frontCreator();
 
-front.pressStartGame();
+front.pressStartGame(playerFactory);
 front.pressResetGame();
 
 
