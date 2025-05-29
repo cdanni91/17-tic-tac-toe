@@ -1,0 +1,170 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+@font-face {
+    font-family: noooordica;
+    src: url(./Norse-Bold.otf);
+}
+
+
+:root {
+    --hero-font: noooordica;
+    --green-submit: #596D48;
+    --text-font: Roboto;
+    --padding-for-right-container: 10px;
+    --input-border: rgb(161, 154, 154);
+
+    /*sidebar var*/
+    --margin-left-sidebar: 5px;
+    --gap-sidebar: 5px;
+    --sidebar-weight: 800;
+    --sidebar-color: #1992d4;
+    --sidebar-text-color: #f2f7f8;
+    --sidebar-icon-height: 20px;
+
+    /*header var*/
+    --header-icon-height: 25px;
+    --header-background-color: #ffffff;
+    --searchbar-background-color: rgba(172, 187, 206, 0.4);
+
+    /*main var*/
+    --main-background-color: rgb(229, 232, 240);
+
+    /*svg filter*/
+    --white-svg: invert(100%) sepia(100%) saturate(0%) hue-rotate(288deg) brightness(102%) contrast(102%);
+    
+}
+
+* {
+    font-family: var(--text-font);
+}
+
+
+/* 1. Use a more-intuitive box-sizing model */
+*, *::before, *::after {
+    box-sizing: border-box;
+  }
+  
+  /* 2. Remove default margin */
+  * {
+    margin: 0px;
+    
+  }
+  
+  /* 3. Enable keyword animations */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      interpolate-size: allow-keywords;
+    }
+  }
+  
+
+  body {
+    /* 4. Add accessible line-height */
+    line-height: 1.5;
+    /* 5. Improve text rendering */
+    -webkit-font-smoothing: antialiased;
+
+    /* border: 5px solid green; */
+    width: 100vw;
+    height: 100vh;
+    background-color: rgb(31, 31, 34);
+    
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+
+  }
+  
+
+  /* 6. Improve media defaults */
+  img, picture, video, canvas, svg {
+    display: block;
+    max-width: 100%;
+  }
+  
+  /* 7. Inherit fonts for form controls */
+  input, button, textarea, select {
+    font: inherit;
+  }
+  
+  /* 8. Avoid text overflows */
+  p, h1, h2, h3, h4, h5, h6 {
+    overflow-wrap: break-word;
+  }
+  
+  /* 9. Improve line wrapping */
+  p {
+    
+    text-wrap: pretty;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+    
+  }
+  
+  /*
+    10. Create a root stacking context
+  */
+  #root, #__next {
+    isolation: isolate;
+  }
+
+
+/* //////////////////////////////////////////////////////////// */
+
+
+
+body {
+    display: grid;
+    grid-template-rows: 1fr 4fr;
+}
+
+    header {
+        display: grid;
+        grid-template-rows: repeat(3,1fr);
+    }
+
+        h1.title {
+            color: var(--header-background-color);
+        }
+
+            header>.h-top-container>label {
+                color: var(--header-background-color);
+            }
+
+        .h-bottom-container{
+            color: var(--header-background-color);
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+    main {
+      
+
+      display: flex;
+      justify-content: center;
+
+
+    }
+
+  
+      #game {
+
+        background-color: var(--green-submit);
+        width: 300px; 
+        height: 300px;
+        text-align: center;
+        align-items: center;
+        
+        
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat((3,1fr));
+
+        
+      }
+
+        

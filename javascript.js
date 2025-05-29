@@ -28,7 +28,10 @@ function gameBoard() {
 function player() {
 
     function createPlayer(name,symbol, isTurn) {
-        return {name, symbol, isTurn};
+
+        const score = 0;
+
+        return {name, symbol, isTurn, score};
     }
 
     return {
@@ -217,7 +220,138 @@ function gameMaster() {
 }
 
 
-const game = function playGame() {
+function frontCreator () {
+
+
+    function pressStartGame() {
+
+        const startGameButton = document.querySelector("#start-game");
+        const gameContainer = document.querySelector("#game");
+
+        function setPlayerNames () {
+            startGameButton.addEventListener("click", () => {
+                const player1NameInput = document.querySelector("#player_1");
+                const player2NameInput = document.querySelector("#player_2");
+                const player1NameSlot = document.querySelector("#player-1-name");
+                const player2NameSlot = document.querySelector("#player-2-name");
+
+                // clears the default name and puts the one in the input fields
+                player1NameSlot.innerText = player1NameInput.value;
+                player2NameSlot.innerText = player2NameInput.value;
+            });
+        }
+
+        
+
+        function createBoard (board) {
+            startGameButton.addEventListener("click", () => {
+
+                let i = 0
+
+                board.forEach(column => {
+                    //console.log(column);
+
+                    column.forEach((cell, index) => {
+                        console.log(cell, index);
+
+                        const square = document.createElement("div");
+                        square.innerText = i;
+                        square.setAttribute("square_number",`${i}`)
+                        gameContainer.appendChild(square);
+                        i++
+                    
+                    
+                    })
+                    
+                });
+
+            });
+        }
+
+
+
+        setPlayerNames();
+        createBoard(board); 
+    }
+
+
+    
+    function pressResetGame() {
+
+        const resetGameButton = document.querySelector("#reset-game");
+         
+
+
+        function clearScores () {
+
+            resetGameButton.addEventListener("click", () => {
+
+                const player1Score = document.querySelector("#player-1-scoreboard");
+                const player2Score = document.querySelector("#player-2-scoreboard");
+
+                
+                player1Score.innerText = 0;
+                player2Score.innerText = 0;
+                
+
+            })
+            }
+
+            function clearBoard() {
+
+                resetGameButton.addEventListener("click", () => {
+
+                const gameBoard = document.querySelector("#game");
+                gameBoard.innerHTML = "";
+                });
+                
+            }
+            
+
+
+        clearScores();
+        clearBoard();
+    }
+
+
+    return {
+        pressStartGame,
+        pressResetGame
+    }
+
+
+
+}
+
+
+
+
+// create board
+const myGame = gameBoard();
+myGame.createBoard(3,3);
+const board = myGame.getBoard();
+
+
+
+//testing the front game
+const front = frontCreator();
+
+front.pressStartGame();
+front.pressResetGame();
+
+
+
+
+
+
+
+
+
+
+
+
+// console tic tac toe
+/* const game = function playGame() {
 
     // create board
     const myGame = gameBoard();
@@ -259,7 +393,7 @@ const game = function playGame() {
         // shows the board
         GM.showBoard(board);
 
-
+        
     
         roundsPlayed += 1;
     }
@@ -270,7 +404,7 @@ const game = function playGame() {
 
 }
 
-game();
+game(); */
 
 
 
@@ -319,4 +453,3 @@ const winningCombinations = [
 
 
  */
-
