@@ -233,11 +233,17 @@ function gameMaster() {
 
 function frontCreator () {
 
+    let name1 = "";
+    let name2 = "";
+    let player1 = {};
+    let player2 = {};
+
 
     function pressStartButton(playerFactory) {
 
         const startGameButton = document.querySelector("#start-game");
         const gameContainer = document.querySelector("#game");
+
 
 
         startGameButton.addEventListener("click", () => {
@@ -251,12 +257,7 @@ function frontCreator () {
 
         function setPlayers () {
 
-                let name1 = "";
-                let name2 = "";
-                let player1 = {};
-                let player2 = {};
-
-
+                
                 function setPlayerNames () {
                     const player1NameInput = document.querySelector("#player_1");
                     const player2NameInput = document.querySelector("#player_2");
@@ -295,16 +296,26 @@ function frontCreator () {
         function createBoard (board) {
 
                 let i = 0
-
+                
                 board.forEach(column => {
                     //console.log(column);
 
                     column.forEach((cell, index) => {
-                        console.log(cell);
-
+                        //console.log(cell);
                         const square = document.createElement("div");
                         square.innerText = cell;
                         square.setAttribute("square_number",`${i}`)
+
+                        // crear un boton que al presionarse:
+                            // verifica de quien es el turno (isTurn)
+                            // revisa si la jugada es valida, sino no hace nada
+                            // si la jugada es valida el innerText es el symbol
+                            // actualiza el tablero (board)
+                            // revisa si la jugada es ganadora
+                            // cambia de turno
+
+                        // recibe el player1 player2, isTurn, board, checkIfWinner
+
                         gameContainer.appendChild(square);
                         i++
                     })
@@ -347,6 +358,8 @@ function frontCreator () {
             player2Score.innerText = 0;
         }
 
+
+    
 
     return {
         pressStartButton,
