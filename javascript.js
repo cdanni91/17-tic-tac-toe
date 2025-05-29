@@ -234,15 +234,29 @@ function gameMaster() {
 function frontCreator () {
 
 
-    function pressStartGame(playerFactory) {
+    function pressStartButton(playerFactory) {
 
         const startGameButton = document.querySelector("#start-game");
         const gameContainer = document.querySelector("#game");
 
 
+        startGameButton.addEventListener("click", () => {
+
+            setPlayers();
+            createBoard(board);
+            clearScores();
+            
+            
+
+        })
+
+
         function setPlayers () {
 
-            startGameButton.addEventListener("click", () => {
+                let name1 = "";
+                let name2 = "";
+                let player1 = {};
+                let player2 = {};
 
                 function setPlayerNames () {
                     const player1NameInput = document.querySelector("#player_1");
@@ -254,40 +268,30 @@ function frontCreator () {
                     player1NameSlot.innerText = player1NameInput.value;
                     player2NameSlot.innerText = player2NameInput.value;
 
-                    const name1 = player1NameInput.value;
-                    const name2 = player2NameInput.value;
+                    name1 = player1NameInput.value;
+                    name2 = player2NameInput.value;
 
-                    return {name1, name2};
                 }
 
-                // get the names of the players
-                const {name1, name2} = setPlayerNames();
+                setPlayerNames();
 
                 function createPlayers(name1, name2) {
 
-                    const player1 = playerFactory.createPlayer(name1,"X",true);
-                    const player2 = playerFactory.createPlayer(name2,"O",false);
+                    player1 = playerFactory.createPlayer(name1,"X",true);
+                    player2 = playerFactory.createPlayer(name2,"O",false);
 
                     console.log(player1, player2);
-
-                    return {player1, player2}
+                    
                 }
 
                 createPlayers(name1,name2);
-                clearScores();
-
-            });
-
-        
+                
+                
 
         }
-        
-
-        
-
+    
 
         function createBoard (board) {
-            startGameButton.addEventListener("click", () => {
 
                 let i = 0
 
@@ -302,19 +306,13 @@ function frontCreator () {
                         square.setAttribute("square_number",`${i}`)
                         gameContainer.appendChild(square);
                         i++
-                    
-                    
                     })
-                    
                 });
-
-            });
         }
 
 
         
-        setPlayers();
-        createBoard(board); 
+        
         
         
     }
@@ -350,7 +348,7 @@ function frontCreator () {
 
 
     return {
-        pressStartGame,
+        pressStartButton,
         pressResetButton,
         clearScores,
         
@@ -375,7 +373,7 @@ const playerFactory = player();
 //testing the front game
 const front = frontCreator();
 
-front.pressStartGame(playerFactory);
+front.pressStartButton(playerFactory);
 front.pressResetButton();
 
 
