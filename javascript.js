@@ -51,7 +51,6 @@ function player() {
 }
 
 
-
 function joystick() {
 
     function markBoard (board, mark) {
@@ -61,8 +60,8 @@ function joystick() {
 
         function askForCoordinates(){
 
-            const rowCoordinate = prompt("What row?");
-            const columnCoordinate = prompt("What column?");
+            const rowCoordinate = "0";
+            const columnCoordinate = "0";
 
             return [parseInt(rowCoordinate), parseInt(columnCoordinate)];
 
@@ -101,13 +100,21 @@ function joystick() {
 }
 
 
-
 function gameMaster() {
 
     /* prints the board */
     function showBoard(board) {
         console.log(board);
     }
+
+
+    function clearBoard() {
+        for (let i = 0; i < board.length; i++) {
+            for (let j = 0; j < board[i].length; j++) {
+                board[i][j] = ""; 
+                }
+            }
+            }
 
     /* alternate the turns */
     function defineWhosTurn (player1, player2) {
@@ -123,11 +130,13 @@ function gameMaster() {
             player2.isTurn = false;
             player1.isTurn = true;
         }
-
+        
         return mark
     }
 
-    function checkIfWinner(board) {
+    function checkIfWinner(board,player1,player2) {
+
+        
 
         const winningCombinations = [
             [[0, 0], [0, 1], [0, 2]], // fila superior
@@ -204,31 +213,54 @@ function gameMaster() {
             y cellC son iguales es un winner move
             */
 
+        
 
         /* add a nested function so it triggers when isWin is true */            
         function endGame (isWin) {
+
+            
             if (isWin) {
+
                 console.log("GAME OVER");
+
+                
+                player1.isTurn === false ?  (console.log("Winner Player 1"), player1.score +=1) : 
+                                            (console.log("Winner Player 2"), player2.score +=1);
+
+                
+
+                clearBoard();
+            
+
+                // add score
+
             }
         }
     
         endGame(isWin);
+
+
         
         /* isWin is returned later so endGame can use it too */
         return isWin;
     }
     
-
+   
 
     
 
     return {
         showBoard,
         defineWhosTurn,
-        checkIfWinner
+        checkIfWinner,
+        
     };
 
 }
+
+
+
+
 
 
 function frontCreator () {
@@ -237,6 +269,10 @@ function frontCreator () {
     let name2 = "";
     let player1 = {};
     let player2 = {};
+    let mark = "";
+    const maxRounds = 9;
+    let roundsPlayed = 0;
+    let winnerFound = false;
 
 
     function pressStartButton(playerFactory) {
@@ -249,7 +285,7 @@ function frontCreator () {
         startGameButton.addEventListener("click", () => {
 
             setPlayers();
-            createBoard(board);
+            renderBoard(board);
             clearScores();
             
         })
@@ -280,7 +316,7 @@ function frontCreator () {
                     player1 = playerFactory.createPlayer(name1,"X",true);
                     player2 = playerFactory.createPlayer(name2,"O",false);
 
-                    console.log(player1, player2);
+                    //console.log(player1, player2);
                     
                 }
 
@@ -293,31 +329,45 @@ function frontCreator () {
         }
     
 
-        function createBoard (board) {
+        function renderBoard (board) {
 
                 let i = 0
                 
-                board.forEach(column => {
-                    //console.log(column);
+                board.forEach((row, rowIndex) => {
+                    
+                    let j = rowIndex;
 
-                    column.forEach((cell, index) => {
-                        //console.log(cell);
+                    row.forEach((cell, colIndex) => {
+
+                        let k = colIndex;
+
                         const square = document.createElement("div");
-                        square.innerText = cell;
-                        square.setAttribute("square_number",`${i}`)
+                        square.innerText = ""; 
+                        square.setAttribute("square_number", `${i}`);
+                        square.classList.add("square");
+            
+                        square.addEventListener("click", () => {
+                            updateCell(square); 
+                        });
+                        
 
-                        // crear un boton que al presionarse:
-                            // verifica de quien es el turno (isTurn)
-                            // revisa si la jugada es valida, sino no hace nada
-                            // si la jugada es valida el innerText es el symbol
-                            // actualiza el tablero (board)
-                            // revisa si la jugada es ganadora
-                            // cambia de turno
+                        function updateCell(element) {
 
-                        // recibe el player1 player2, isTurn, board, checkIfWinner
+                            // si el elemento tiene contenido, no haga nada
 
+                            if (element.innerText != "") return;
+
+                            mark = GM.defineWhosTurn(player1,player2);
+                            element.innerText = mark; // actualiza el elemento visual
+                            board[j][k] = mark; // actualiza el board
+                            GM.checkIfWinner(board,player1,player2); // revisa si hay un ganador
+                            
+                        }
+
+
+            
                         gameContainer.appendChild(square);
-                        i++
+                        i++;
                     })
                 });
         }
@@ -342,7 +392,6 @@ function frontCreator () {
             })
 
          
-
             function clearBoard() {
                 const gameBoard = document.querySelector("#game");
                 gameBoard.innerHTML = "";
@@ -360,7 +409,6 @@ function frontCreator () {
 
 
     
-
     return {
         pressStartButton,
         pressResetButton,
@@ -383,6 +431,10 @@ const board = myGame.getBoard();
 // create players
 const playerFactory = player();
 
+// create the game master
+const GM = gameMaster();
+
+const playerJoystick = joystick();
 
 //testing the front game
 const front = frontCreator();
