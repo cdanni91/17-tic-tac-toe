@@ -102,6 +102,10 @@ function joystick() {
 
 function gameMaster() {
 
+
+    const maxRounds = 9;
+    let roundsPlayed = 0;
+
     /* prints the board */
     function showBoard(board) {
         console.log(board);
@@ -136,7 +140,7 @@ function gameMaster() {
 
     function checkIfWinner(board,player1,player2) {
 
-        
+        roundsPlayed += 1;
 
         const winningCombinations = [
             [[0, 0], [0, 1], [0, 2]], // fila superior
@@ -221,28 +225,63 @@ function gameMaster() {
             
             if (isWin) {
 
-                console.log("GAME OVER");
+                console.log("ROUND OVER");
 
-                
-                player1.isTurn === false ?  (console.log("Winner Player 1"), player1.score +=1) : 
-                                            (console.log("Winner Player 2"), player2.score +=1);
-
-                
-
-                clearBoard();
             
+                addScore(); // add the point to the player
+                clearBoard(); // cleans the board array
+                cleanGameBoard();
 
-                // add score
+                function addScore () {
+
+                    // asummes thats a tie and doesnt do nothing
+                    if (roundsPlayed >= maxRounds) {
+    
+                        roundsPlayed = 0;
+    
+                        return};
+    
+                    player1.isTurn === false ?  (console.log("Winner Player 1"), player1.score +=1) : 
+                                                (console.log("Winner Player 2"), player2.score +=1);
+    
+                        roundsPlayed = 0;
+                                            }         
+                
 
             }
         }
-    
+        
         endGame(isWin);
 
+        //resets the gameboard if max rounds have been play = tie
+        if (roundsPlayed > maxRounds) {
 
+            cleanGameBoard();
+        }
         
         /* isWin is returned later so endGame can use it too */
         return isWin;
+
+        
+
+        function cleanGameBoard () {
+            const gameElement = document.querySelector("#game");
+
+            if (gameElement) {
+            // Get all direct children of #game
+            const children = gameElement.children;
+
+            // Iterate through the children and clear their content
+            for (let i = 0; i < children.length; i++) {
+                children[i].textContent = "";
+            }
+    
+        }
+        }
+
+
+        
+
     }
     
    
@@ -270,9 +309,9 @@ function frontCreator () {
     let player1 = {};
     let player2 = {};
     let mark = "";
-    const maxRounds = 9;
-    let roundsPlayed = 0;
-    let winnerFound = false;
+    let isBoardCreated = false;
+    
+    
 
 
     function pressStartButton(playerFactory) {
@@ -284,9 +323,13 @@ function frontCreator () {
 
         startGameButton.addEventListener("click", () => {
 
+            if (isBoardCreated) return; // if the board is already created it doesnt let you do it again
+
             setPlayers();
             renderBoard(board);
             clearScores();
+
+            isBoardCreated = true; //
             
         })
 
@@ -353,14 +396,16 @@ function frontCreator () {
 
                         function updateCell(element) {
 
-                            // si el elemento tiene contenido, no haga nada
+                            
 
-                            if (element.innerText != "") return;
+                            if (element.innerText != "") return; // si el elemento tiene contenido, no haga nada
 
                             mark = GM.defineWhosTurn(player1,player2);
                             element.innerText = mark; // actualiza el elemento visual
                             board[j][k] = mark; // actualiza el board
                             GM.checkIfWinner(board,player1,player2); // revisa si hay un ganador
+                            updateScoreBoard(); //actualiza el scoreboard
+
                             
                         }
 
@@ -386,13 +431,14 @@ function frontCreator () {
 
             resetGameButton.addEventListener("click", () =>{
 
-                clearBoard();
+                isBoardCreated = false; // lets you create the game board again
+                deleteBoard();
                 clearScores();
 
             })
 
          
-            function clearBoard() {
+            function deleteBoard() {
                 const gameBoard = document.querySelector("#game");
                 gameBoard.innerHTML = "";
             }
@@ -407,12 +453,23 @@ function frontCreator () {
             player2Score.innerText = 0;
         }
 
+    
+    function updateScoreBoard () {
+
+            const player1Score = document.querySelector("#player-1-scoreboard");
+            const player2Score = document.querySelector("#player-2-scoreboard");
+            player1Score.innerText = player1.score;
+            player2Score.innerText = player2.score;
+    }
+
+    
 
     
     return {
         pressStartButton,
         pressResetButton,
         clearScores,
+        updateScoreBoard
         
     }
 
