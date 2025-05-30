@@ -470,7 +470,6 @@ function frontCreator () {
         pressResetButton,
         clearScores,
         updateScoreBoard
-        
     }
 
 
